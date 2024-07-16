@@ -22,7 +22,9 @@ export class V1GetConfigQueryHandler
     async execute(): Promise<QueryHandlerReturnType> {
         this.logger.log('Executing...');
 
-        const exchanges = await this.twelveDataService.getExchanges();
+        const exchanges = await this.twelveDataService.getExchanges({
+            withPlan: false,
+        });
 
         this.logger.log(
             `Executed successfully. ${exchanges.length.toString()} exchanges found.`,
@@ -36,12 +38,15 @@ export class V1GetConfigQueryHandler
                 '5',
                 '15',
                 '30',
+                '45',
                 '60',
+                '120',
+                '240',
                 '1D',
                 '1W',
                 '1M',
             ],
-            supports_group_request: true,
+            supports_group_request: false,
             supports_marks: false,
             supports_search: true,
             supports_timescale_marks: false,
