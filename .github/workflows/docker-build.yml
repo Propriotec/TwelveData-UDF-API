@@ -28,4 +28,4 @@ jobs:
           context: .  # Docker build context
           file: ./Dockerfile  # Path to your Dockerfile
           push: true
-          tags: ghcr.io/Propriotec/TwelveData-UDF-API:latest
+          tags: ghcr.io/propriotec/twelvedata-udf-api:latest
