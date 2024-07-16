@@ -7,8 +7,6 @@ import {
     HttpHealthIndicator,
 } from '@nestjs/terminus';
 
-import { Public } from '../../../../authentication/decorator/public.decorator';
-
 @ApiTags('Health')
 @Controller({
     version: '1',
@@ -28,7 +26,6 @@ export class V1CheckHealthController {
     @Get('/health')
     @HealthCheck()
     @HttpCode(200)
-    @Public()
     healthCheck() {
         this.logger.log('Checking health');
 

@@ -33,26 +33,14 @@ export const ConfigSchema = z.object({
     THROTTLER_DEFAULT_LIMIT: StringToNumber.default(100),
     THROTTLER_USE_REDIS: StringToBoolean.default('false'),
 
-    // Authentication
-    AUTH_IP_STRICT: StringToBoolean.default('false'),
-    AUTH_AUTO_VERIFY: StringToBoolean.default('false'),
-
     // JWT
     JWT_SECRET: z.string(),
 
-    // Token
-    TOKEN_ACCESS_SECRET: z.string(),
-    TOKEN_REFRESH_SECRET: z.string(),
-    TOKEN_VERIFICATION_SECRET: z.string(),
-    TOKEN_RESET_PASSWORD_SECRET: z.string(),
-
-    TOKEN_ACCESS_TOKEN_EXPIRATION: StringToNumberOptional.optional(),
-    TOKEN_REFRESH_TOKEN_EXPIRATION: StringToNumberOptional.optional(),
-    TOKEN_VERIFICATION_TOKEN_EXPIRATION: StringToNumberOptional.optional(),
-    TOKEN_RESET_PASSWORD_TOKEN_EXPIRATION: StringToNumberOptional.optional(),
-
     // Email
     EMAIL_FROM: z.string().email().default('no-reply@test.com'),
+
+    // Twelve Data
+    TWELVE_DATA_API_KEY: z.string(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;

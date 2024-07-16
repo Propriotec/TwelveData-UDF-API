@@ -58,9 +58,6 @@ const bootstrap = async () => {
         .setTitle(`${mainConfig.APP_NAME} API`)
         .setExternalDoc('Postman Collection', '/openapi-json')
         .setVersion('1.0')
-        .addBearerAuth(undefined, 'access-token')
-        .addBearerAuth(undefined, 'refresh-token')
-        .addSecurityRequirements('access-token')
         .build();
     const document = SwaggerModule.createDocument(app, config);
 
