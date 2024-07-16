@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { OpenTelemetryModule } from 'nestjs-otel';
@@ -15,6 +15,7 @@ import { MailerModule } from '@/infrastructure/mailer/mailer.module';
 import { RepositoriesModule } from '@/infrastructure/repositories/repositories.module';
 import { ThrottlerModule } from '@/infrastructure/throttler/throttler.module';
 import { TwelveDataModule } from '@/infrastructure/twelvedata/twelvedata.module';
+import { StandardHttpResponseInterceptor } from '@/shared/interceptors/standard-http-response.interceptor';
 
 @Module({
     imports: [
@@ -43,6 +44,10 @@ import { TwelveDataModule } from '@/infrastructure/twelvedata/twelvedata.module'
         UDFModule,
     ],
     providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: StandardHttpResponseInterceptor,
+        },
         {
             provide: APP_GUARD,
             useClass: ThrottlerGuard,

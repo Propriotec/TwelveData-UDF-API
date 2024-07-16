@@ -1,11 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class TwelveDataService {
     private readonly logger = new Logger(TwelveDataService.name);
 
-    constructor(private readonly http: HttpService) {}
+    constructor(
+        private readonly http: HttpService,
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    ) {}
 
     async getApiUsage() {
         const result = await this.http.axiosRef
@@ -26,5 +30,22 @@ export class TwelveDataService {
         }
 
         this.logger.log('TwelveData API key is valid and ready to go.');
+    }
+
+    async getExchanges() {
+        return this.http.axiosRef
+            .get<{
+                data: {
+                    name: string;
+                    code: string;
+                    country: string;
+                    timezone: string;
+                }[];
+            }>('/exchanges')
+            .then((response) => response.data.data)
+            .catch((error: unknown) => {
+                this.logger.error(error);
+                return [];
+            });
     }
 }

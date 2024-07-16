@@ -10,7 +10,6 @@ import { Logger as PinoLogger } from 'nestjs-pino';
 
 import { AppModule } from '@/application/app.module';
 import { MainConfigService } from '@/infrastructure/config/configs/main-config.service';
-import { StandardHttpResponseInterceptor } from '@/shared/interceptors/standard-http-response.interceptor';
 import { otelSDK } from '@/shared/utilities/tracing';
 
 const bootstrap = async () => {
@@ -31,7 +30,6 @@ const bootstrap = async () => {
 
     // Setting up the global pipes and interceptors
     app.useGlobalPipes(new ValidationPipe());
-    app.useGlobalInterceptors(new StandardHttpResponseInterceptor());
     app.useLogger(app.get(PinoLogger));
 
     // Express Middleware

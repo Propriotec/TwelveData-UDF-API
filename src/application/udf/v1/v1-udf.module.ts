@@ -1,9 +1,12 @@
 import { ClassProvider, Module, Type } from '@nestjs/common';
 
-const QueryHandlers: ClassProvider[] = [];
-const QueryControllers: Type[] = [];
+import { V1GetConfigController } from '@/application/udf/v1/queries/get-config/get-config.http.controller';
+import { V1GetConfigQueryHandler } from '@/application/udf/v1/queries/get-config/get-config.query.handler';
 
-const CommandHandlers: ClassProvider[] = [];
+const QueryHandlers: Type[] = [V1GetConfigQueryHandler];
+const QueryControllers: Type[] = [V1GetConfigController];
+
+const CommandHandlers: Type[] = [];
 const CommandControllers: Type[] = [];
 
 const EventHandlers: ClassProvider[] = [];
