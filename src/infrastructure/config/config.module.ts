@@ -2,14 +2,13 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 
 import { ConfigSchema } from '@/infrastructure/config/config-schema';
-import { AuthenticationConfigService } from '@/infrastructure/config/configs/authentication-config.service';
 import { CacheConfigService } from '@/infrastructure/config/configs/cache-config.service';
 import { EmailConfigService } from '@/infrastructure/config/configs/email.config.service';
 import { JwtConfigService } from '@/infrastructure/config/configs/jwt-config.service';
 import { MainConfigService } from '@/infrastructure/config/configs/main-config.service';
 import { RedisConfigService } from '@/infrastructure/config/configs/redis-config.service';
 import { ThrottlerConfigService } from '@/infrastructure/config/configs/throttler-config.service';
-import { TokenConfigService } from '@/infrastructure/config/configs/token-config.service';
+import { TwelveDataConfigService } from '@/infrastructure/config/configs/twelvedata-config.service';
 
 @Global()
 @Module({
@@ -27,20 +26,18 @@ import { TokenConfigService } from '@/infrastructure/config/configs/token-config
         RedisConfigService,
         CacheConfigService,
         ThrottlerConfigService,
-        AuthenticationConfigService,
         EmailConfigService,
-        TokenConfigService,
         JwtConfigService,
+        TwelveDataConfigService,
     ],
     exports: [
         MainConfigService,
         RedisConfigService,
         CacheConfigService,
         ThrottlerConfigService,
-        AuthenticationConfigService,
         EmailConfigService,
-        TokenConfigService,
         JwtConfigService,
+        TwelveDataConfigService,
     ],
 })
 export class ConfigModule {}
