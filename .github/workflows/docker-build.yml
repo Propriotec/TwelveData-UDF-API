@@ -22,10 +22,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image to GitHub Container Registry for Latest
+        if: github.ref_name == 'main'
         uses: docker/build-push-action@v2
         with:
           context: .  # Docker build context
           file: ./Dockerfile  # Path to your Dockerfile
           push: true
           tags: ghcr.io/propriotec/twelvedata-udf-api:latest
+
+      - name: Build and push Docker image to GitHub Container Registry for Branch
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Docker build context
+          file: ./Dockerfile  # Path to your Dockerfile
+          push: true
+          tags: ghcr.io/propriotec/twelvedata-udf-api:${{ github.ref_name }}
+
+      - name: Build and push Docker image to GitHub Container Registry for SHA
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Docker build context
+          file: ./Dockerfile  # Path to your Dockerfile
+          push: true
+          tags: ghcr.io/propriotec/twelvedata-udf-api:${{ github.sha }}
