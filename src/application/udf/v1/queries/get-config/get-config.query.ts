@@ -1,1 +1,1 @@
-export class GetConfigQuery {}
+export class V1GetConfigQuery {}

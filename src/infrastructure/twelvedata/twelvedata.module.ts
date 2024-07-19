@@ -1,9 +1,10 @@
 import { HttpModule, HttpService } from '@nestjs/axios';
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { Global, Logger, Module, OnModuleInit } from '@nestjs/common';
 
 import { TwelveDataConfigService } from '@/infrastructure/config/configs/twelvedata-config.service';
 import { TwelveDataService } from '@/infrastructure/twelvedata/twelvedata.service';
 
+@Global()
 @Module({
     imports: [
         HttpModule.registerAsync({
@@ -17,6 +18,7 @@ import { TwelveDataService } from '@/infrastructure/twelvedata/twelvedata.servic
         }),
     ],
     providers: [TwelveDataService],
+    exports: [TwelveDataService],
 })
 export class TwelveDataModule implements OnModuleInit {
     private readonly logger = new Logger(TwelveDataModule.name);
