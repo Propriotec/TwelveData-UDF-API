@@ -22,24 +22,35 @@ export class V1GetConfigResponseDto {
     currency_codes!: string[] | undefined;
 
     @ApiProperty({
-        type: String,
+        type: Object,
         isArray: true,
         required: false,
         description: 'The supported exchanges for the charting library',
         example: [
-            'NYSE',
-            'NASDAQ',
-            'ASX',
-            'LSE',
-            'TSX',
-            'XETRA',
-            'NSE',
-            'SSE',
-            'TSE',
-            'HKEX',
+            {
+                name: 'None',
+                value: '',
+                desc: 'View All',
+            },
+            {
+                name: 'Commodity',
+                value: 'COMMODITY',
+                desc: 'Commodity',
+            },
+            {
+                name: 'Nasdaq',
+                value: 'Nasdaq',
+                desc: 'United States',
+            },
         ],
     })
-    exchanges!: string[] | undefined;
+    exchanges!:
+        | {
+              value: string;
+              name: string;
+              desc: string;
+          }[]
+        | undefined;
 
     @ApiProperty({
         type: String,

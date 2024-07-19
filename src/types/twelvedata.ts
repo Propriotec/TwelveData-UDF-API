@@ -1,7 +1,33 @@
+export const TwelveDataSymbolType = [
+    'American Depositary Receipt',
+    'Bond',
+    'Bond Fund',
+    'Closed-end Fund',
+    'Common Stock',
+    'Depositary Receipt',
+    'Digital Currency',
+    'ETF',
+    'Exchange-Traded Note',
+    'Global Depositary Receipt',
+    'Index',
+    'Limited Partnership',
+    'Mutual Fund',
+    'Physical Currency',
+    'Preferred Stock',
+    'REIT',
+    'Right',
+    'Structured Product',
+    'Trust',
+    'Unit',
+    'Warrant',
+];
+
+export type TwelveDataSymbolType = (typeof TwelveDataSymbolType)[number];
+
 // Exchange Endpoint
 export interface TwelveDataExchangeRequest<WithPlanType extends boolean> {
     withPlan?: WithPlanType;
-    type?: string;
+    type?: TwelveDataSymbolType;
     name?: string;
     code?: string;
     country?: string;
@@ -30,6 +56,12 @@ export type TwelveDataConditionalExchangeResponse<HasPlan extends boolean> =
         ? TwelveDataExchangeWithPlanResponse
         : TwelveDataExchangeResponse;
 
+// Crypto Exchanges Endpoint
+
+export interface TwelveDataCryptoExchangeResponse {
+    name: string;
+}
+
 // History Endpoint
 export interface TwelveDataHistoryRequest {
     symbol: string;
@@ -38,9 +70,10 @@ export interface TwelveDataHistoryRequest {
     exchange?: string;
     mic_code?: string;
     country?: string;
-    type?: string;
+    type?: TwelveDataSymbolType;
 
     outputsize?: number;
+    timezone?: string;
 
     dp?: number;
 
@@ -62,9 +95,9 @@ export interface TwelveDataHistoryRawResponse {
         currency: string;
         exchange_timezone: string;
         exchange: string;
-        type: string;
+        type: TwelveDataSymbolType;
     };
-    values: {
+    values?: {
         datetime: string;
         open: string;
         high: string;
@@ -81,7 +114,7 @@ export interface TwelveDataHistoryResponse {
         currency: string;
         exchange_timezone: string;
         exchange: string;
-        type: string;
+        type: TwelveDataSymbolType;
     };
     values: {
         datetime: Date;
@@ -91,4 +124,20 @@ export interface TwelveDataHistoryResponse {
         close: number;
         volume: number;
     }[];
+}
+
+// Search Endpoint
+export interface TwelveDataSearchRequest {
+    symbol: string;
+    outputsize?: number;
+}
+
+export interface TwelveDataSearchResponse {
+    symbol: string;
+    instrument_name: string;
+    exchange: string;
+    mic_code: string;
+    exchange_timezone: string;
+    instrument_type: TwelveDataSymbolType;
+    country: string;
 }

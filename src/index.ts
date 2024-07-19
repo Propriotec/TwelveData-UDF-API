@@ -29,7 +29,11 @@ const bootstrap = async () => {
     const mainConfig = app.get(MainConfigService);
 
     // Setting up the global pipes and interceptors
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            transform: true,
+        }),
+    );
     app.useLogger(app.get(PinoLogger));
 
     // Express Middleware

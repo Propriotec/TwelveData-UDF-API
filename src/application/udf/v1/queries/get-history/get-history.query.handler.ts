@@ -1,7 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { IQueryHandler, QueryBus, QueryHandler } from '@nestjs/cqrs';
 
-import { V1GetHistoryResponseDto } from '@/application/udf/v1/queries/get-history/dto/get-history.response.dto';
+import {
+    V1GetHistoryOkResponseDto,
+    V1GetHistoryResponseDto,
+} from '@/application/udf/v1/queries/get-history/dto/get-history.response.dto';
 import { V1GetHistoryQuery } from '@/application/udf/v1/queries/get-history/get-history.query';
 import { TwelveDataService } from '@/infrastructure/twelvedata/twelvedata.service';
 
@@ -26,20 +29,29 @@ export class V1GetHistoryQueryHandler
         this.logger.log('Executing...');
 
         const result = await this.twelveDataService.getHistory({
-            symbol: query.symbol,
-            interval: '1day',
-            outputsize: 100,
+            ...query,
+            order: 'ASC',
         });
+
+        if (!result.values.length) {
+            this.logger.error('No data found.');
+
+            return Promise.resolve({
+                s: 'no_data',
+            });
+        }
 
         this.logger.log(
             `Executed successfully. ${result.values.length.toString()} items found.`,
         );
 
         const tableisedData = result.values.reduce<
-            Omit<V1GetHistoryResponseDto, 's'>
+            Omit<V1GetHistoryOkResponseDto, 's'>
         >(
             (acc, value) => {
-                acc.t.push(value.datetime.getDate());
+                acc.t.push(
+                    Number((value.datetime.getTime() / 1000).toFixed(0)),
+                );
                 acc.c.push(value.close);
                 acc.o.push(value.open);
                 acc.h.push(value.high);

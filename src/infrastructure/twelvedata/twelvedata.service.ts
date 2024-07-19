@@ -3,10 +3,13 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import {
     TwelveDataConditionalExchangeResponse,
+    TwelveDataCryptoExchangeResponse,
     TwelveDataExchangeRequest,
     TwelveDataHistoryRawResponse,
     TwelveDataHistoryRequest,
     TwelveDataHistoryResponse,
+    TwelveDataSearchRequest,
+    TwelveDataSearchResponse,
 } from '@/types/twelvedata';
 
 @Injectable()
@@ -54,11 +57,24 @@ export class TwelveDataService {
             });
     }
 
-    async getHistory(options: TwelveDataHistoryRequest) {
+    async getCryptoExchange(): Promise<TwelveDataCryptoExchangeResponse[]> {
+        return this.http.axiosRef
+            .get<{
+                data: TwelveDataCryptoExchangeResponse[];
+            }>('/cryptocurrency_exchanges', {})
+            .then((response) => response.data.data)
+            .catch((error: unknown) => {
+                this.logger.error(error);
+                return [];
+            });
+    }
+
+    async getHistory(
+        options: TwelveDataHistoryRequest,
+    ): Promise<TwelveDataHistoryResponse> {
         return this.http.axiosRef
             .get<TwelveDataHistoryRawResponse>('/time_series', {
                 params: {
-                    timezone: 'UTC',
                     ...options,
                     start_date: options.start_date
                         ?.toISOString()
@@ -70,23 +86,60 @@ export class TwelveDataService {
                         .replace('T', ' '),
                 },
             })
-            .then(
-                (response) =>
-                    ({
-                        meta: response.data.meta,
-                        values: response.data.values.map((value) => ({
+            .then((response) => {
+                return {
+                    meta: response.data.meta,
+                    values:
+                        response.data.values?.map((value) => ({
                             datetime: new Date(value.datetime),
                             open: Number(value.open),
                             high: Number(value.high),
                             low: Number(value.low),
                             close: Number(value.close),
                             volume: Number(value.volume),
-                        })),
-                    }) satisfies TwelveDataHistoryResponse,
-            )
+                        })) ?? [],
+                } satisfies TwelveDataHistoryResponse;
+            })
             .catch((error: unknown) => {
                 this.logger.error(error);
                 throw new Error('Failed to fetch history data.');
+            });
+    }
+
+    async resolveSymbol(symbol: string, exchange?: string) {
+        return this.searchSymbol({
+            symbol,
+            outputsize: 120,
+        }).then((response) => {
+            const symbolData = response.filter((x) =>
+                exchange
+                    ? x.exchange === exchange || x.mic_code === exchange
+                    : true,
+            )[0];
+
+            if (!symbolData) {
+                throw new Error('Symbol not found.');
+            }
+
+            return symbolData;
+        });
+    }
+
+    async searchSymbol(
+        options: TwelveDataSearchRequest,
+    ): Promise<TwelveDataSearchResponse[]> {
+        return this.http.axiosRef
+            .get<{
+                data: TwelveDataSearchResponse[];
+            }>('/symbol_search', {
+                params: {
+                    ...options,
+                },
+            })
+            .then((response) => response.data.data)
+            .catch((error: unknown) => {
+                this.logger.error(error);
+                return [];
             });
     }
 }

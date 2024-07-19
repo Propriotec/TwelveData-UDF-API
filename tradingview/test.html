@@ -22,14 +22,14 @@
 
 <script type="text/javascript">
     new TradingView.widget({
+        theme: 'dark',
         container: 'chartContainer',
         locale: 'en',
-        library_path: 'charting_library/',
-        datafeed: new Datafeeds.UDFCompatibleDatafeed("http://localhost:3000/v1/udf", 0),
         symbol: 'AAPL',
-        interval: '1D',
+        library_path: 'charting_library/',
+        datafeed: new Datafeeds.UDFCompatibleDatafeed("http://localhost:3000/v1/udf", 30000),
         fullscreen: true,
-        debug: true,
+        debug: false,
 
     });
 </script>

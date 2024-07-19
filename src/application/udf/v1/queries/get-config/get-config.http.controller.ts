@@ -24,7 +24,7 @@ export class V1GetConfigController {
         type: V1GetConfigResponseDto,
     })
     @CacheKey('udf-config')
-    @CacheTTL(60 * 60 * 1000)
+    @CacheTTL(0)
     @Get('/config')
     @NonStandardHttpResponse()
     @UseInterceptors(CacheInterceptor)

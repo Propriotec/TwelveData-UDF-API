@@ -26,12 +26,48 @@ export class V1GetConfigQueryHandler
             withPlan: false,
         });
 
+        const cryptoExchanges =
+            await this.twelveDataService.getCryptoExchange();
+
         this.logger.log(
             `Executed successfully. ${exchanges.length.toString()} exchanges found.`,
         );
 
         return Promise.resolve({
-            exchanges: exchanges.map((exchange) => exchange.code),
+            exchanges: [
+                {
+                    value: '',
+                    name: 'None',
+                    desc: 'View All',
+                },
+                {
+                    value: 'COMMODITY',
+                    name: 'Commodity',
+                    desc: 'Commodity',
+                },
+                {
+                    name: 'Currency',
+                    desc: 'Currency',
+                    value: 'PHYSICAL CURRENCY',
+                },
+                ...cryptoExchanges.map((exchange) => ({
+                    value: exchange.name,
+                    name: exchange.name,
+                    desc: 'Crypto',
+                })),
+
+                ...new Set(
+                    [
+                        ...new Map(
+                            exchanges.map((item) => [item.name, item]),
+                        ).values(),
+                    ].map((exchange) => ({
+                        value: exchange.name,
+                        name: exchange.name,
+                        desc: exchange.country,
+                    })),
+                ),
+            ],
             currency_codes: undefined,
             supported_resolutions: [
                 '1',
@@ -51,7 +87,7 @@ export class V1GetConfigQueryHandler
             supports_search: true,
             supports_timescale_marks: false,
             supports_time: false,
-            supports_types: false,
+            symbols_types: false,
             symbols_groupings: undefined,
         });
     }

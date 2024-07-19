@@ -15,6 +15,7 @@ export class V1GetHistoryQuery implements TwelveDataHistoryRequest {
     end_date?: Date | undefined;
     previous_close?: boolean | undefined;
     adjust?: 'all' | 'splits' | 'dividends' | 'none' | undefined;
+    timezone?: string | undefined;
 
     constructor(options: TwelveDataHistoryRequest) {
         Object.assign(this, options);
