@@ -1,0 +1,48 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image to GitHub Container Registry for Latest
+        if: github.ref_name == 'main'
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Docker build context
+          file: ./Dockerfile  # Path to your Dockerfile
+          push: true
+          tags: ghcr.io/propriotec/twelvedata-udf-api:latest
+
+      - name: Build and push Docker image to GitHub Container Registry for Branch
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Docker build context
+          file: ./Dockerfile  # Path to your Dockerfile
+          push: true
+          tags: ghcr.io/propriotec/twelvedata-udf-api:${{ github.ref_name }}
+
+      - name: Build and push Docker image to GitHub Container Registry for SHA
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Docker build context
+          file: ./Dockerfile  # Path to your Dockerfile
+          push: true
+          tags: ghcr.io/propriotec/twelvedata-udf-api:${{ github.sha }}
